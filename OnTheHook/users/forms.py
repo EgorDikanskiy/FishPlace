@@ -54,5 +54,5 @@ class EditProfile(ModelForm):
             User.email.field.name,
             User.location.field.name,
             User.avatar.field.name,
-            User.birthday.field.name,
+            User.experience.field.name,
         )

@@ -6,7 +6,7 @@ __all__ = []
 
 
 class CatalogViewSet(viewsets.ModelViewSet):
-    queryset = models.Spot.objects.all()
+    queryset = models.Spot.objects.filter(is_active=True)
     permission_classes = [permissions.AllowAny]
     serializer_class = serializers.CatalogSerializer
 

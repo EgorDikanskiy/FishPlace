@@ -1,9 +1,11 @@
-from ckeditor.widgets import CKEditorWidget
 from django import forms
+from django.contrib.admin.widgets import FilteredSelectMultiple
 
 from catalog.models import Spot
 
 __all__ = []
+
+from django_filters import widgets
 
 
 class SpotForm(forms.ModelForm):
@@ -25,6 +27,5 @@ class SpotForm(forms.ModelForm):
             Spot.user.field.name,
             Spot.date_created.field.name,
             Spot.is_active.field.name,
+            Spot.tags.field.name,
         )
-
-        widgets = {Spot.text.field.name: CKEditorWidget()}

@@ -155,7 +155,6 @@ class CreateFishingPlaceView(View, FormMixin):
             None,
             instance=self.request.user,
         )
-
         return render(request, "catalog/create.html", self.context)
 
     def form_valid(self, form):

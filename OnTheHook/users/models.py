@@ -70,9 +70,16 @@ class User(AbstractBaseUser, PermissionsMixin):
         null=True,
     )
 
+    experience = models.IntegerField(
+        verbose_name="Стаж в годах",
+        blank=True,
+        null=True,
+    )
+
     location = models.ForeignKey(
         "catalog.Region",
         on_delete=models.CASCADE,
+        verbose_name="Место жительства",
         blank=True,
         null=True,
     )

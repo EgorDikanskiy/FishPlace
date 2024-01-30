@@ -35,10 +35,12 @@ class SpotAdmin(admin.ModelAdmin):
         catalog.models.Spot.lat.field.name,
         catalog.models.Spot.lon.field.name,
         catalog.models.Spot.region.field.name,
+        catalog.models.Spot.tags.field.name,
         catalog.models.Spot.status_free.field.name,
         catalog.models.Spot.date_created.field.name,
     )
     readonly_fields = (catalog.models.Spot.date_created.field.name,)
+    filter_horizontal = (catalog.models.Spot.tags.field.name,)
 
     list_display = (
         catalog.models.Spot.name.field.name,
@@ -67,3 +69,4 @@ class SpotAdmin(admin.ModelAdmin):
 
 
 admin.site.register(catalog.models.Region)
+admin.site.register(catalog.models.FishTag)

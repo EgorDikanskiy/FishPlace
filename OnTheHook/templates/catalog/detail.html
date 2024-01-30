@@ -29,6 +29,13 @@
     </div>
     <div class="py-3">
       <div class="mb-3">
+        <ul class="d-flex list-unstyled">
+        {% for tag in spot_info.tags.all %}
+        <li class="tag">{{ tag.tag }}</li>
+        {% endfor %}
+        </ul>
+      </div>
+      <div class="mb-3">
         <p>{{ spot_info.text|safe }}</p>
       </div>
       <p class="h4"><a class="btn btn-primary"

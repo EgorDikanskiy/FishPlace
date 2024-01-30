@@ -50,6 +50,17 @@
   object-fit: cover;
 }
 
+.tag {
+  padding: 0.3rem 0.85rem;
+  margin-right: 0.5rem;
+  font-size: 0.8rem;
+
+  text-transform: uppercase;
+  border-radius: 2rem;
+  background-color: #6286D5;
+  color: white;
+}
+
 @media (min-width: 768px) {
   .carousel-image {
     height: 450px;
