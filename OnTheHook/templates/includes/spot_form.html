@@ -7,13 +7,14 @@
     <div class="error-message alert alert-danger">{{ message }}</div>
   {% endif %}
 {% endfor %}
-<form method="post" enctype="multipart/form-data">
+<form method="post" id="imageV" enctype="multipart/form-data">
   {% csrf_token %}
   <div class="mb-3">
     {% for field in form %}
       <div class="form-label {% if field.errors %}{% endif %}">
         <label class="control-label" for="{{ field.id_for_label }}">{{ field.label|capfirst }}</label>
         <div class="controls">
+          
           {{ field }}
           {% if field.name == 'region' %}
             {% include "includes/special_test.html" %}

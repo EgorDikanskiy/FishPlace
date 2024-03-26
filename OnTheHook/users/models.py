@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
 from django.contrib.auth.validators import UnicodeUsernameValidator
 from django.core import validators
@@ -61,6 +62,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         verbose_name="аватарка",
         help_text="",
         upload_to=path_to_save,
+        default="/avatars/base.jpg",
     )
 
     birthday = models.DateField(
@@ -82,6 +84,19 @@ class User(AbstractBaseUser, PermissionsMixin):
         verbose_name="Место жительства",
         blank=True,
         null=True,
+    )
+
+    token_activate = models.CharField(
+        verbose_name="Токен",
+        help_text="уникальная штука для активации",
+        max_length=50,
+        blank=True,
+        null=True,
+    )
+
+    is_active = models.BooleanField(
+        verbose_name="Пользователь активен",
+        default=settings.DEFAULT_USER_IS_ACTIVE,
     )
 
     is_superuser = models.BooleanField(

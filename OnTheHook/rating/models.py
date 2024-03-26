@@ -65,7 +65,7 @@ class RatingImages(models.Model):
         return (
             f"rating/{self.spot.spot_id}/"
             f"{self.spot.user.id}/"
-            f"{dateformat.format(timezone.now(), 'd_m_y_H_i',)}.{type_image}"
+            f"{dateformat.format(timezone.now(), "d_m_y_H_i")}.{type_image}"
         )
 
     spot = models.ForeignKey(

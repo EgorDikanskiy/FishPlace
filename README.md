@@ -15,7 +15,7 @@ cd Documents
 Клонирование репозитория:
 
 ```Bash
-git clone https://gitlab.crja72.ru/django_2023/projects/team9
+git clone https://github.com/EgorDikanskiy/FishPlace.git
 ```
 
 #### Настройка виртуальной среды (virtual environment)

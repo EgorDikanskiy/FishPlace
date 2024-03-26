@@ -1,4 +1,5 @@
 from django.urls import include, path
+from django.views.decorators.cache import cache_page
 from rest_framework import routers
 
 from catalog import api, views
@@ -17,12 +18,12 @@ router_regions.register("regions", api.RegionViewSet)
 urlpatterns = [
     path(
         "",
-        views.SpotListView.as_view(),
+        cache_page(60 * 1)(views.SpotListView.as_view()),
         name="spot_list",
     ),
     path(
         "<int:pk>/",
-        views.SpotDetailView.as_view(),
+        cache_page(120 * 1)(views.SpotDetailView.as_view()),
         name="spot_detail",
     ),
     path(
@@ -32,7 +33,7 @@ urlpatterns = [
     ),
     path(
         "created/",
-        views.CreatedPlace.as_view(),
+        cache_page(60 * 1)(views.CreatedPlace.as_view()),
         name="created_spot",
     ),
     path(
@@ -42,7 +43,7 @@ urlpatterns = [
     ),
     path(
         "region/<int:region>/",
-        views.RegionView.as_view(),
+        cache_page(60 * 1)(views.RegionView.as_view()),
         name="region",
     ),
     path(

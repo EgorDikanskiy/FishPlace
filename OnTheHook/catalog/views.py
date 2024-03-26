@@ -27,7 +27,11 @@ class SpotListView(ListView):
             .filter(
                 is_active=True,
             )
-            .only("name", "region")
+            .only(
+                "name",
+                "region",
+                "text",
+            )
         )
         regions = Region.objects.only("region", "id")
         context = {"spots": spots, "regions": regions}
@@ -65,9 +69,6 @@ class SpotDetailView(DetailView, FormMixin):
     def get(self, request, pk):
         instance = None
         spot = self.model.objects.filter(id=pk)
-        if not spot.first() or not spot.first().__getattribute__("is_active"):
-            if not request.user.is_moderator or not request.user.is_superuser:
-                return render(request, "404.html", {})
         form = SpotRatingForm(
             None,
             instance=instance,
@@ -109,34 +110,33 @@ class SpotDetailView(DetailView, FormMixin):
     def post(self, request, pk):
         form = SpotRatingForm(request.POST or None)
         if request.method == "POST" and form.is_valid():
-            if request.user.is_authenticated:
-                if form.cleaned_data.get("mark") in (
-                    5,
-                    4,
-                    3,
-                    2,
-                    1,
-                ):
-                    del form.cleaned_data["images"]
-                    rating_spot = SpotRating.objects.update_or_create(
-                        user=request.user,
-                        spot_id=pk,
-                        defaults=form.cleaned_data,
+            if form.cleaned_data.get("mark") in (
+                5,
+                4,
+                3,
+                2,
+                1,
+            ):
+                del form.cleaned_data["images"]
+                rating_spot = SpotRating.objects.update_or_create(
+                    user=request.user,
+                    spot_id=pk,
+                    defaults=form.cleaned_data,
+                )
+                if request.FILES.get("images"):
+                    RatingImages.objects.create(
+                        spot=rating_spot[0],
+                        image=request.FILES.get("images"),
                     )
-                    if request.FILES.get("images"):
-                        RatingImages.objects.create(
-                            spot=rating_spot[0],
-                            image=request.FILES.get("images"),
-                        )
-                    messages.success(request, "Рейтинг выставлен")
-                elif form.cleaned_data.get("mark") == 0:
-                    SpotRating.objects.filter(
-                        user=request.user,
-                        spot_id=pk,
-                    ).delete()
-                    messages.success(request, "Рейтинг удалён")
-                else:
-                    messages.error(request, "Ошибка обработки формы!")
+                messages.success(request, "Рейтинг выставлен")
+            elif form.cleaned_data.get("mark") == 0:
+                SpotRating.objects.filter(
+                    user=request.user,
+                    spot_id=pk,
+                ).delete()
+                messages.success(request, "Рейтинг удалён")
+            else:
+                messages.error(request, "Ошибка обработки формы!")
         return redirect(self.get_success_url(**self.kwargs))
 
     def get_success_url(self, **kwargs):

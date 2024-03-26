@@ -23,23 +23,22 @@ ALLOWED_HOSTS = os.environ.get(
 ).split(",")
 
 INTERNAL_IPS = [
-    "concovpr.beget.tech",
     "127.0.0.1",
     "lcoalhost",
 ]
 
-DEBUG = load_bool("DJANGO_DEBUG", False)
+DEBUG = load_bool("DJANGO_DEBUG", True)
 
-DEFAULT_USER_IS_ACTIVE = True
+DEFAULT_USER_IS_ACTIVE = False
 
 MAX_ATTEMPTS_AUTH = ...
 
-EMAIL_HOST = "beget.com"
-EMAIL_PORT = 25
-EMAIL_HOST_USER = "klevoemestechko@klevoemestechko.ru"
-EMAIL_PASSWORD = "1Ds8oxCf6Qqj"
-EMAIL_USE_TLS = False
-EMAIL_USE_SSL = True
+EMAIL_HOST = "smtp.mail.ru"
+EMAIL_PORT = 2525
+EMAIL_HOST_USER = "EMAIL"
+EMAIL_HOST_PASSWORD = "APP_PASSWORD"
+EMAIL_USE_TLS = True
+EMAIL_USE_SSL = False
 
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 SERVER_EMAIL = EMAIL_HOST_USER
@@ -126,6 +125,13 @@ DATABASES = {
     },
 }
 
+CACHES = {
+    "default": {
+        "BACKEND": "django.core.cache.backends.redis.RedisCache",
+        "LOCATION": "redis://127.0.0.1:6555",
+    },
+}
+
 CORS_ORIGIN_ALLOW_ALL = True
 CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOW_HEADERS = ["*"]
@@ -185,22 +191,6 @@ MEDIA_ROOT = BASE_DIR / "media"
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
-# CITIES_LIGHT_TRANSLATION_LANGUAGES = ["ru"]
-# CITIES_LIGHT_INCLUDE_COUNTRIES = ["RU"]
-# CITIES_LIGHT_INCLUDE_CITY_TYPES = [
-#     "PPL",
-#     "PPLA",
-#     "PPLA2",
-#     "PPLA3",
-#     "PPLA4",
-#     "PPLC",
-#     "PPLF",
-#     "PPLG",
-#     "PPLL",
-#     "PPLR",
-#     "PPLS",
-#     "STLMT",
-# ]
 
 CKEDITOR_JQUERY_URL = (
     "https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"
@@ -244,11 +234,11 @@ CKEDITOR_BROWSE_SHOW_DIRS = True
 
 SOCIAL_AUTH_USER_MODEL = AUTH_USER_MODEL
 
-SOCIAL_AUTH_VK_OAUTH2_KEY = "51818085"
-SOCIAL_AUTH_VK_OAUTH2_SECRET = "orkcjbrxdOFh01Wn1IBK"
+SOCIAL_AUTH_VK_OAUTH2_KEY = ...
+SOCIAL_AUTH_VK_OAUTH2_SECRET = ...
 
-YANDEX_OAUTH2_CLIENT_KEY = "df2b81aa8dba4561bd3e816345e89aa3"
-YANDEX_OAUTH2_CLIENT_SECRET = "d638dbc2967d4e5da8870228de159b4e"
+YANDEX_OAUTH2_CLIENT_KEY = ...  # пока не работает
+YANDEX_OAUTH2_CLIENT_SECRET = ...  # пока не работает
 
 SOCIAL_AUTH_VK_OAUTH2_SCOPE = ["email"]
 SOCIAL_AUTH_ADMIN_USER_SEARCH_FIELDS = [

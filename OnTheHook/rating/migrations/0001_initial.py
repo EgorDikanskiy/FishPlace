@@ -7,7 +7,6 @@ import rating.models
 
 
 class Migration(migrations.Migration):
-
     initial = True
 
     dependencies = [
@@ -18,8 +17,24 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='RatingImages',
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('image', models.ImageField(blank=True, null=True, upload_to=rating.models.RatingImages.upload_to, verbose_name='изображение')),
+                (
+                    'id',
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name='ID',
+                    ),
+                ),
+                (
+                    'image',
+                    models.ImageField(
+                        blank=True,
+                        null=True,
+                        upload_to=rating.models.RatingImages.upload_to,
+                        verbose_name='изображение',
+                    ),
+                ),
             ],
             options={
                 'verbose_name': 'изображения',
@@ -29,11 +44,50 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='SpotRating',
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('mark', models.SmallIntegerField(choices=[(5, 'Любовь'), (4, 'Обожание'), (3, 'Нейтрально'), (2, 'Неприязнь'), (1, 'Ненависть'), (0, 'Удалить')], verbose_name='оценка')),
-                ('created_at', models.DateTimeField(auto_now=True, verbose_name='дата отзыва')),
-                ('comment', ckeditor.fields.RichTextField(help_text='Оставьте комментарий', verbose_name='Комментарий')),
-                ('spot', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='catalog.spot', verbose_name='товар')),
+                (
+                    'id',
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name='ID',
+                    ),
+                ),
+                (
+                    'mark',
+                    models.SmallIntegerField(
+                        choices=[
+                            (5, 'Любовь'),
+                            (4, 'Обожание'),
+                            (3, 'Нейтрально'),
+                            (2, 'Неприязнь'),
+                            (1, 'Ненависть'),
+                            (0, 'Удалить'),
+                        ],
+                        verbose_name='оценка',
+                    ),
+                ),
+                (
+                    'created_at',
+                    models.DateTimeField(
+                        auto_now=True, verbose_name='дата отзыва'
+                    ),
+                ),
+                (
+                    'comment',
+                    ckeditor.fields.RichTextField(
+                        help_text='Оставьте комментарий',
+                        verbose_name='Комментарий',
+                    ),
+                ),
+                (
+                    'spot',
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to='catalog.spot',
+                        verbose_name='товар',
+                    ),
+                ),
             ],
             options={
                 'verbose_name': 'рэйтинг',

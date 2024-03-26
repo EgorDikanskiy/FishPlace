@@ -10,4 +10,7 @@ Pillow==10.1.0
 python-dotenv==1.0.0
 sorl-thumbnail==12.10.0
 transliterate==1.10.2
-
+python-social-auth[django]
+django-cors-headers==4.3.1
+six==1.16.0
+redis==5.0.3

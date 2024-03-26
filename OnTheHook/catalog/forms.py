@@ -1,11 +1,8 @@
 from django import forms
-from django.contrib.admin.widgets import FilteredSelectMultiple
 
 from catalog.models import Spot
 
 __all__ = []
-
-from django_filters import widgets
 
 
 class SpotForm(forms.ModelForm):

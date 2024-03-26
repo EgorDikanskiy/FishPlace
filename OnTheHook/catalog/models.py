@@ -38,13 +38,13 @@ class Region(models.Model):
 
 class FishTag(models.Model):
     tag = models.TextField(
-        verbose_name='тег',
+        verbose_name="тег",
         unique=True,
     )
 
     class Meta:
-        verbose_name = 'тег'
-        verbose_name_plural = 'теги'
+        verbose_name = "тег"
+        verbose_name_plural = "теги"
 
     def __str__(self):
         return self.tag
@@ -101,8 +101,8 @@ class Spot(models.Model):
     )
     tags = models.ManyToManyField(
         FishTag,
-        verbose_name='Tags',
-        help_text='Выберите или добавьте тег',
+        verbose_name="Tags",
+        help_text="Выберите или добавьте тег",
     )
 
     class Meta:
@@ -112,21 +112,21 @@ class Spot(models.Model):
 
     def clean(self) -> None:
         if (
-                not self.id
-                and Spot.objects.filter(
-            lat__gt=self.lat - 0.005,
-            lat__lt=self.lat + 0.005,
-            lon__gt=self.lon - 0.005,
-            lon__lt=self.lon + 0.005,
-        ).exists()
+            not self.id
+            and Spot.objects.filter(
+                lat__gt=self.lat - 0.005,
+                lat__lt=self.lat + 0.005,
+                lon__gt=self.lon - 0.005,
+                lon__lt=self.lon + 0.005,
+            ).exists()
         ):
             raise ValidationError("Объект уже существует")
         return super().clean()
 
     def save(
-            self,
-            *args,
-            **kwargs,
+        self,
+        *args,
+        **kwargs,
     ):
         return super().save(*args, **kwargs)
 
@@ -143,7 +143,7 @@ class SpotMainImage(models.Model):
         type_image = file_name.split(".")[1]
         return (
             f"reservoir/{self.spot.user.id}/{self.spot_id}/"
-            f"{dateformat.format(timezone.now(), 'd_m_y_H_i', )}.{type_image}"
+            f"{dateformat.format(timezone.now(), "d_m_y_H_i")}.{type_image}"
         )
 
     spot = models.OneToOneField(
@@ -194,7 +194,7 @@ class SpotImages(models.Model):
         type_image = file_name.split(".")[1]
         return (
             f"reservoir/{self.spot.user.id}/{self.spot_id}/"
-            f"{dateformat.format(timezone.now(), 'd_m_y_H_i', )}.{type_image}"
+            f"{dateformat.format(timezone.now(), "d_m_y_H_i")}.{type_image}"
         )
 
     spot = models.ForeignKey(

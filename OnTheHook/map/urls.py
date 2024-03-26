@@ -1,4 +1,5 @@
 from django.urls import path
+from django.views.decorators.cache import cache_page
 from map import views
 
 app_name = "map"
@@ -6,7 +7,7 @@ app_name = "map"
 urlpatterns = [
     path(
         "",
-        views.MapView.as_view(),
+        cache_page(60 * 1)(views.MapView.as_view()),
         name="map",
     ),
 ]

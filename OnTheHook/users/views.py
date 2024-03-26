@@ -1,11 +1,17 @@
 from django.conf import settings
 from django.contrib.auth import login
-from django.shortcuts import render
-from django.views import generic
-from django.views import View
+from django.core.mail import EmailMultiAlternatives
+from django.http import Http404
+from django.shortcuts import redirect, render
+from django.template.loader import render_to_string
+from django.urls import reverse
+from django.utils.html import strip_tags
+from django.views import generic, View
 
 from users.forms import CustomUserCreateForm, EditProfile
 from users.models import User
+from users.utils import email_confirmation_token
+
 
 __all__ = []
 
@@ -19,6 +25,7 @@ class ProfileView(View):
     def get(self, request, *args, **kwargs):
         self.context["model"] = request.user
         self.context["form"] = EditProfile(instance=request.user)
+
         return render(request, self.template, self.context)
 
     def post(self, request, *args, **kwargs):
@@ -44,21 +51,49 @@ class RegisterView(generic.FormView):
         )
         form.is_active = settings.DEFAULT_USER_IS_ACTIVE
         form.email = normalize_email
-        form.save()
 
-        login(
-            self.request,
-            User.objects.get(username=form.cleaned_data["username"]),
-            backend="OnTheHook.backends.ModifyLogin",
+        user = form.save(commit=False)
+        user.token_activate = email_confirmation_token.make_token(user)
+        user.save()
+
+        subject = "Подтверждение аккаунта"
+        link = "http://localhost:8000" + reverse(  # URL
+            "users:activate",
+            args=[user.id, user.token_activate],
         )
+        html_message = render_to_string(
+            "auth_email.html",
+            {
+                "confirmation_link": link,
+                "username": user.username,
+            },
+        )
+        plain_message = strip_tags(html_message)
+        from_email = settings.EMAIL_HOST_USER
+        to = [user.email]
+        msg = EmailMultiAlternatives(subject, plain_message, from_email, to)
+        msg.attach_alternative(html_message, "text/html")
+        msg.send()
+
         return super().form_valid(form)
 
 
 class ActivateView(generic.View):
-    tempalte_name = ...
-    context = ...
-    model = User
+    context = {}
 
-    def get(self, request):
-        ...
-        return render(request, self.tempalte_name, self.context)
+    def get(self, request, **kwargs):
+        try:
+            user = User.objects.get(**kwargs)
+        except User.DoesNotExist:
+            user = None
+        if isinstance(user, User) and not user.is_active:
+            user.is_active = True
+            user.save()
+            login(
+                request,
+                user,
+                "OnTheHook.backends.ModifyLogin",
+            )
+            return redirect(reverse("users:profile"))
+
+        return Http404("Ошибка")
