@@ -1,24 +1,35 @@
 from django.contrib import admin
-from django.contrib.auth import admin as auth_admin
-
-from users.forms import CustomUserChangeForm, CustomUserCreateForm
-from users.models import User
-
+from django.contrib.auth import get_user_model
 
 __all__ = []
 
+User = get_user_model()
 
-class UserAdministrator(auth_admin.UserAdmin):
-    add_form = CustomUserCreateForm
-    form = CustomUserChangeForm
+
+class UserAdministrator(admin.ModelAdmin):
     model = User
-    list_display = (
+
+    readonly_fields = (
+        "id",
+        User.token.field.name,
+        User.date_joined.field.name,
+    )
+    fields = (
         "id",
         User.username.field.name,
+        User.first_name.field.name,
+        User.last_name.field.name,
+        User.email.field.name,
+        User.avatar.field.name,
+        User.last_login.field.name,
+        User.is_active.field.name,
+        User.is_superuser.field.name,
         User.is_staff.field.name,
-        User.is_active,
+        User.token_active.field.name,
+        User.token.field.name,
+        User.date_joined.field.name,
     )
-    exclude = ("password",)
+    exclude = (User.password.field.name,)
 
 
-admin.site.register(User)
+admin.site.register(User, UserAdministrator)

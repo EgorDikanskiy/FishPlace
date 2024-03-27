@@ -5,40 +5,6 @@
 <div class="container">
   {{form.media}}
   {% include 'includes/spot_form.html' %}
-  <div id="imageContainer"></div>
-  <script>
-    document.getElementById('imageV').addEventListener('change', function(event) {
-        var previewContainer = document.getElementById('imageContainer');
-        previewContainer.innerHTML = ''; // Очищаем контейнер предварительного просмотра перед добавлением новых изображений
-
-        var files = event.target.files; // Получаем список выбранных файлов
-
-        for (var i = 0; i < files.length; i++) {
-            var file = files[i];
-            var reader = new FileReader();
-
-            reader.onload = function(event) {
-                var img = document.createElement('img');
-                img.src = event.target.result;
-                img.style.maxWidth = '200px'; // Устанавливаем максимальную ширину для изображения
-                img.style.maxHeight = '200px'; // Устанавливаем максимальную высоту для изображения
-
-                var deleteButton = document.createElement('button');
-                deleteButton.textContent = 'Удалить';
-                deleteButton.addEventListener('click', function() {
-                    this.parentNode.remove(); // Удаляем родительский элемент (изображение и кнопку удаления)
-                });
-
-                var container = document.createElement('div');
-                container.appendChild(img); // Добавляем изображение в контейнер
-                container.appendChild(deleteButton); // Добавляем кнопку удаления в контейнер
-                previewContainer.appendChild(container); // Добавляем контейнер в контейнер предварительного просмотра
-            };
-
-            reader.readAsDataURL(file); // Читаем файл как URL-адрес данных
-        }
-    });
-</script>
 </div>
 
 {% endblock %}

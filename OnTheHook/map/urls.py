@@ -7,7 +7,7 @@ app_name = "map"
 urlpatterns = [
     path(
         "",
-        cache_page(60 * 1)(views.MapView.as_view()),
+        cache_page(60 * 10)(views.MapView.as_view()),
         name="map",
     ),
 ]

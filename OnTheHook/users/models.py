@@ -14,7 +14,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         return f"avatars/{self.pk}_{file_name}"
 
     username = models.CharField(
-        verbose_name="пользовательское имя",
+        verbose_name="Пользовательское имя",
         help_text=(
             "имя отображаемое для всех пользователей (nickname)."
             "\nДопустимые символы: латиница, цифры, @|.|+|-|_"
@@ -29,38 +29,37 @@ class User(AbstractBaseUser, PermissionsMixin):
     )
 
     email = models.EmailField(
-        verbose_name="почта",
-        help_text="почтовый ящик",
+        verbose_name="Почта",
+        help_text="почтовый адрес",
         unique=True,
     )
 
     first_name = models.CharField(
-        verbose_name="имя",
-        help_text="как вас родители назвали",
+        verbose_name="Имя",
         blank=True,
         null=True,
         max_length=150,
+        default="отсутствует",
     )
 
     last_name = models.CharField(
-        verbose_name="Фамилия. Как у отца или псевдоним",
-        help_text="",
+        verbose_name="Фамилия",
         blank=True,
         null=True,
         max_length=150,
+        default="отсутствует",
     )
 
     date_joined = models.DateTimeField(
-        verbose_name="дата присоединения",
-        help_text="деньи время, когда пользователь зарегистрировался",
+        verbose_name="Дата присоединения",
+        help_text="день и время, когда пользователь зарегистрировался",
         auto_now_add=True,
         null=True,
         blank=True,
     )
 
     avatar = models.ImageField(
-        verbose_name="аватарка",
-        help_text="",
+        verbose_name="Аватарка",
         upload_to=path_to_save,
         default="/avatars/base.jpg",
     )
@@ -72,10 +71,11 @@ class User(AbstractBaseUser, PermissionsMixin):
         null=True,
     )
 
-    experience = models.IntegerField(
+    experience = models.PositiveIntegerField(
         verbose_name="Стаж в годах",
         blank=True,
         null=True,
+        default=0,
     )
 
     location = models.ForeignKey(
@@ -86,12 +86,17 @@ class User(AbstractBaseUser, PermissionsMixin):
         null=True,
     )
 
-    token_activate = models.CharField(
+    token = models.CharField(
         verbose_name="Токен",
         help_text="уникальная штука для активации",
         max_length=50,
         blank=True,
         null=True,
+    )
+
+    token_active = models.BooleanField(
+        verbose_name="Токен активен",
+        default=True,
     )
 
     is_active = models.BooleanField(

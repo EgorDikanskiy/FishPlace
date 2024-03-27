@@ -38,10 +38,6 @@
       <div class="mb-3">
         <p>{{ spot_info.text|safe }}</p>
       </div>
-      <p class="h4"><a class="btn btn-primary"
-          href="https://yandex.ru/maps/?ll={{ spot_info.lon }}%2C{{ spot_info.lat }}&mode=search&sll={{ spot_info.lon }}%2C{{ spot_info.lat }}&text={{ spot_info.lat }}%2C{{ spot_info.lon }}&z=13.63">В путь</a>
-          <a class="btn btn-primary" href="/catalog/created/{{spot_info.id}}/edit/">Редактировать</a>
-      </p>
       <p class="mb-1">Широта: <span>{{ spot_info.lat }}</span></p>
       <p class="mb-1">Долгота: <span>{{ spot_info.lon }}</span></p>
       <div class="accordion accordion-flush" id="accordionFlushExample">

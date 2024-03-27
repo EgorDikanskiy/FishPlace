@@ -1,14 +1,20 @@
 from django.conf import settings
 from django.contrib.auth import login
+from django.contrib.sites.shortcuts import get_current_site
 from django.core.mail import EmailMultiAlternatives
-from django.http import Http404
+from django.http import HttpResponse, HttpResponseNotAllowed
 from django.shortcuts import redirect, render
 from django.template.loader import render_to_string
 from django.urls import reverse
 from django.utils.html import strip_tags
-from django.views import generic, View
+from django.views import generic
 
-from users.forms import CustomUserCreateForm, EditProfile
+from users.forms import (
+    CustomUserCreateForm,
+    EditProfile,
+    FormEmailPass,
+    FormResetPassword,
+)
 from users.models import User
 from users.utils import email_confirmation_token
 
@@ -18,7 +24,7 @@ __all__ = []
 PATH = "users/"
 
 
-class ProfileView(View):
+class ProfileView(generic.View):
     template = PATH + "profile.html"
     context = {}
 
@@ -27,6 +33,13 @@ class ProfileView(View):
         self.context["form"] = EditProfile(instance=request.user)
 
         return render(request, self.template, self.context)
+
+
+class ChangeProfile(ProfileView):
+    template = PATH + "profile_change.html"
+    succses_url = "/auth/profile/"
+    context = {}
+    form_class = EditProfile
 
     def post(self, request, *args, **kwargs):
         form = EditProfile(request.POST, instance=request.user)
@@ -53,13 +66,13 @@ class RegisterView(generic.FormView):
         form.email = normalize_email
 
         user = form.save(commit=False)
-        user.token_activate = email_confirmation_token.make_token(user)
+        user.token = email_confirmation_token.make_token(user)
         user.save()
 
         subject = "Подтверждение аккаунта"
-        link = "http://localhost:8000" + reverse(  # URL
+        link = f"http://{get_current_site(self.request)}" + reverse(
             "users:activate",
-            args=[user.id, user.token_activate],
+            args=[user.id, user.token],
         )
         html_message = render_to_string(
             "auth_email.html",
@@ -88,6 +101,8 @@ class ActivateView(generic.View):
             user = None
         if isinstance(user, User) and not user.is_active:
             user.is_active = True
+            user.token = email_confirmation_token.make_token(user)
+            user.token_active = False
             user.save()
             login(
                 request,
@@ -96,4 +111,91 @@ class ActivateView(generic.View):
             )
             return redirect(reverse("users:profile"))
 
-        return Http404("Ошибка")
+        return HttpResponseNotAllowed("Ошибка")
+
+
+class ResetPassword(generic.View):
+    tempalte_name = PATH + "auth/password_reset.html"
+    context = {}
+    form_class = FormEmailPass
+
+    def get(self, request, **kwargs):
+        self.context["form"] = self.form_class(None)
+        return render(request, self.tempalte_name, self.context)
+
+    def post(self, request, **kwargs):
+        form = self.form_class(request.POST)
+        if not form.is_valid():
+            self.context["form"] = form
+            return render(request, self.tempalte_name, self.context)
+        email = form.cleaned_data.get("email")
+        try:
+            user = User.objects.by_mail(email)
+        except User.DoesNotExist:
+            user = False
+
+        if user:
+            user.token = email_confirmation_token.make_token(user)
+            user.token_active = True
+            user.save()
+
+            link = f"http://{get_current_site(request)}" + reverse(
+                "users:change_password",
+                args=[user.pk, user.token],
+            )
+
+            html_message = render_to_string(
+                "change_email.html",
+                {
+                    "link": link,
+                    "username": user.username,
+                },
+            )
+
+            plain_message = strip_tags(html_message)
+
+            msg = EmailMultiAlternatives(
+                "Сброс пароля",
+                plain_message,
+                None,
+                [email],
+            )
+            msg.attach_alternative(html_message, "text/html")
+            msg.send()
+
+        return redirect(reverse("users:reset_password_done"))
+
+
+class ChangePassword(generic.FormView):
+    template_name = PATH + "auth/password_change.html"
+    context = {}
+    form_class = FormResetPassword
+    success_url = "/auth/profile/"
+    user = ...
+
+    def get(self, request, **kwargs):
+        try:
+            self.user = User.objects.get(**self.kwargs)
+        except User.DoesNotExist:
+            self.user = False
+
+        if self.user:
+            return super().get(request, **kwargs)
+        return redirect(reverse("catalog:spot_list"))
+
+    def form_valid(self, form) -> HttpResponse:
+        user = self.user
+        user.set_password(form.cleaned_data.get("password1"))
+        user.token_active = False
+        user.save()
+        login(self.request, user, "OnTheHook.backend.ModifyLogin")
+
+        return super().form_valid(form)
+
+
+class ChangePasswordDone(generic.TemplateView):
+    template_name = PATH + "auth/password_change_done.html"
+
+
+class ResetPasswordDone(generic.TemplateView):
+    template_name = PATH + "auth/password_reset_done.html"

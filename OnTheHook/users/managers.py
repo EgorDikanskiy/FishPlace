@@ -58,5 +58,4 @@ class CustomUserManager(UserManager):
         self,
         mail,
     ):
-        email = self.normalize_email(mail)
-        return super().get_queryset().get(email=email)
+        return super().get_queryset().get(email=mail)

@@ -2,22 +2,33 @@
 {% block content %}
   {% load static %}
   <title>{{model.username}}</title>
-  <img src="{{ model.get_avatar }}" alt="" class="img-thumbnail mx-auto d-block" width="400px" height="300" />
-  {% include 'includes/auth_form.html' %}
-  <p class="text-center container"><a class="btn btn-primary mb-4" href="{% url 'catalog:created_spot' %}">Ваши места</a></p>
-  <script>
-    //поиск населёного пункта. необходимо api
-    var typingTimer
-    var doneTypingInterval = 1000
-    function getValue() {
-      clearTimeout(typingTimer)
-      typingTimer = setTimeout(performSearch, doneTypingInterval)
-    }
+
+  <div class="container rounded bg-white mt-5 mb-5">
+    <div class="row">
+        <div class="col-md-3 border-right"></div>
+        <div class="col-md-5 border-right">
+          <img src="{{ model.get_avatar }}" alt="" class="img-thumbnail mx-auto d-block" width="400px" height="300" />
+            <div class="p-3 py-5">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h4 class="text-center">Профиль</h4>
+                </div>
+                <div class="row mt-2">
+                    <div class="col-md-6"><label class="labels">Имя</label><input type="text" class="form-control" placeholder="first name" value="{{request.user.first_name}}" disabled></div>
+                    <div class="col-md-6"><label class="labels">Фамилия</label><input type="text" class="form-control" value="{{request.user.first_name}}" placeholder="surname" disabled></div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col-md-12"><label class="labels">Пользовательское имя</label><input type="text" class="form-control" placeholder="enter phone number" disabled value="{{request.user.username}}" disabled></div>
+                    <div class="col-md-12"><label class="labels">Почта</label><input type="text" class="form-control" placeholder="enter address line 1" value="{{request.user.email}}" disabled></div>
+                    <div class="col-md-12"><label class="labels">Стаж рыбачества</label><input type="text" class="form-control" placeholder="enter address line 2" value="{{request.user.experience}}" disabled></div>
+                    <div class="col-md-12"><label class="labels">Регион</label><input type="text" class="form-control" placeholder="enter address line 2" value="{{request.user.location}}" disabled></div></div>
+                    
+                  <p><a class="btn btn-primary mt-3 container"href="{% url 'users:change_profile' %}">Редактировать профиль</a></p>
+                </div>
+            </div>
+            
+        </div>
+    </div>
     
-    function performSearch() {
-      var locationInput = document.getElementById('id_location')
-      var locationValue = locationInput.value
-      console.log('Выполняем поиск для:', locationValue)
-    }
-  </script>        
+</div>
+</div>    
 {% endblock %}

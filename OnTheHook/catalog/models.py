@@ -54,7 +54,7 @@ class Spot(models.Model):
     user = models.ForeignKey(
         "users.User",
         verbose_name="пользователь",
-        on_delete=models.CASCADE,
+        on_delete=models.SET_NULL, null=True,
     )
     region = models.ForeignKey(
         "Region",

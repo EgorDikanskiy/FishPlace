@@ -33,10 +33,10 @@ DEFAULT_USER_IS_ACTIVE = False
 
 MAX_ATTEMPTS_AUTH = ...
 
-EMAIL_HOST = "smtp.mail.ru"
+EMAIL_HOST = "smtp.beget.com"
 EMAIL_PORT = 2525
-EMAIL_HOST_USER = "EMAIL"
-EMAIL_HOST_PASSWORD = "APP_PASSWORD"
+EMAIL_HOST_USER = "klevoemestechko@klevoemestechko.store"
+EMAIL_HOST_PASSWORD = "BofX7LO&"
 EMAIL_USE_TLS = True
 EMAIL_USE_SSL = False
 
@@ -128,7 +128,7 @@ DATABASES = {
 CACHES = {
     "default": {
         "BACKEND": "django.core.cache.backends.redis.RedisCache",
-        "LOCATION": "redis://127.0.0.1:6555",
+        "LOCATION": "redis://127.0.0.1:6379",
     },
 }
 

@@ -1,5 +1,5 @@
 from django.contrib.auth.forms import UserChangeForm, UserCreationForm
-from django.forms import ModelForm
+from django.forms import CharField, EmailField, Form, ModelForm, PasswordInput
 
 from users.models import User
 
@@ -56,3 +56,15 @@ class EditProfile(ModelForm):
             User.avatar.field.name,
             User.experience.field.name,
         )
+
+
+class FormEmailPass(Form):
+    email = EmailField(
+        required=True,
+        label="Почта",
+    )
+
+
+class FormResetPassword(Form):
+    password1 = CharField(label="Введите пароль", widget=PasswordInput())
+    password2 = CharField(label="Подтвердите пароль", widget=PasswordInput())

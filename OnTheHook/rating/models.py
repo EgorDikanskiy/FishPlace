@@ -73,7 +73,7 @@ class RatingImages(models.Model):
         on_delete=models.CASCADE,
         null=True,
         blank=True,
-        verbose_name="товар",
+        verbose_name="Место|Водоём",
         related_query_name="rating_images",
         related_name="rating_images",
     )
