@@ -43,7 +43,6 @@ urlpatterns = [
         ),
         name="logout",
     ),
-
     path(
         "password_change/<int:pk>/<str:token>/",
         views.ChangePassword.as_view(),
@@ -64,6 +63,4 @@ urlpatterns = [
         redirect_required(views.ResetPasswordDone.as_view()),
         name="reset_password_done",
     ),
-
-
 ]

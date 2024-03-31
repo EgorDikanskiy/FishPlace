@@ -29,7 +29,7 @@ class RatingChoices:
 class SpotRating(models.Model):
     objects = RatingManager()
     user = models.ForeignKey(
-        User,
+        User, 
         on_delete=models.CASCADE,
         verbose_name="пользователь",
     )

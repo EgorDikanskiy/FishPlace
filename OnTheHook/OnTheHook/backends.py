@@ -24,9 +24,3 @@ class ModifyLogin(ModelBackend):
             return get_user
         messages.error(request, "Неверный логин или пароль!")
         return None
-
-    def get_user(self, username):
-        try:
-            return User.objects.get(pk=username)
-        except User.DoesNotExist:
-            return None

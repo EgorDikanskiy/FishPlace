@@ -47,7 +47,6 @@ class SpotAdmin(admin.ModelAdmin):
         catalog.models.Spot.text.field.name,
         catalog.models.Spot.lat.field.name,
         catalog.models.Spot.lon.field.name,
-        catalog.models.Spot.region.field.name,
         catalog.models.Spot.date_created.field.name,
         catalog.models.Spot.status_free.field.name,
     )

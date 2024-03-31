@@ -40,19 +40,24 @@
       </div>
       <p class="mb-1">Широта: <span>{{ spot_info.lat }}</span></p>
       <p class="mb-1">Долгота: <span>{{ spot_info.lon }}</span></p>
-      <div class="accordion accordion-flush" id="accordionFlushExample">
-        <div class="accordion-item">
-          <h2 class="accordion-header">
-            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                    data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
-              Форма для отзыва!
-            </button>
-          </h2>
-          <div id="flush-collapseOne" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
-            {% include "includes/auth_form.html" %}
+      {% if request.user.is_authenticated %}
+        <div class="accordion accordion-flush" id="accordionFlushExample">
+          <div class="accordion-item">
+            <h2 class="accordion-header">
+              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                      data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
+                Форма для отзыва!
+              </button>
+            </h2>
+            <div id="flush-collapseOne" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
+              {% include "includes/auth_form.html" %}
+            </div>
           </div>
         </div>
-      </div>
+      {%endif%}
+      <p class="h4"><a class="btn btn-primary"
+        href="https://yandex.ru/maps/?ll={{ spot_info.lon }}%2C{{ spot_info.lat }}&mode=search&sll={{ spot_info.lon }}%2C{{ spot_info.lat }}&text={{ spot_info.lat }}%2C{{ spot_info.lon }}&z=13.63">В путь</a>
+      </p>
       <div class="py-3">
         <p class="h4">Отчёты о рыбалке</p>
         <div class="p-2 bg-body-tertiary mb-2 rounded-2">

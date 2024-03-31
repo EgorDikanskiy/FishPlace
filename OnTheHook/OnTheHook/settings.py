@@ -1,3 +1,4 @@
+from operator import imod
 import os
 from pathlib import Path
 
@@ -24,7 +25,7 @@ ALLOWED_HOSTS = os.environ.get(
 
 INTERNAL_IPS = [
     "127.0.0.1",
-    "lcoalhost",
+    "localhost",
 ]
 
 DEBUG = load_bool("DJANGO_DEBUG", True)
@@ -33,10 +34,10 @@ DEFAULT_USER_IS_ACTIVE = False
 
 MAX_ATTEMPTS_AUTH = ...
 
-EMAIL_HOST = "smtp.beget.com"
-EMAIL_PORT = 2525
-EMAIL_HOST_USER = "klevoemestechko@klevoemestechko.store"
-EMAIL_HOST_PASSWORD = "BofX7LO&"
+EMAIL_HOST = "<host>"
+EMAIL_PORT = "<port>"
+EMAIL_HOST_USER = "<mail>"
+EMAIL_HOST_PASSWORD = "<pass>"
 EMAIL_USE_TLS = True
 EMAIL_USE_SSL = False
 
@@ -67,7 +68,7 @@ INSTALLED_APPS = [
     # наше
     "users.apps.UsersConfig",
     "catalog.apps.CatalogConfig",
-    "moderation.apps.ModerationConfig",
+    # "moderation.apps.ModerationConfig",
     "rating.apps.RatingConfig",
     "homepage.apps.HomepageConfig",
     "map.apps.MapConfig",
@@ -234,8 +235,8 @@ CKEDITOR_BROWSE_SHOW_DIRS = True
 
 SOCIAL_AUTH_USER_MODEL = AUTH_USER_MODEL
 
-SOCIAL_AUTH_VK_OAUTH2_KEY = ...
-SOCIAL_AUTH_VK_OAUTH2_SECRET = ...
+SOCIAL_AUTH_VK_OAUTH2_SECRET = "vVozvbVaKpnP0ew9hAdK"
+SOCIAL_AUTH_VK_OAUTH2_KEY = "51818085"
 
 YANDEX_OAUTH2_CLIENT_KEY = ...  # пока не работает
 YANDEX_OAUTH2_CLIENT_SECRET = ...  # пока не работает

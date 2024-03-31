@@ -67,13 +67,8 @@ class SpotDetailView(DetailView, FormMixin):
     context = {}
 
     def get(self, request, pk):
-        instance = None
+
         spot = self.model.objects.filter(id=pk)
-        form = SpotRatingForm(
-            None,
-            instance=instance,
-        )
-        self.context["form"] = form
         self.context["spot_info"] = (
             spot.select_related("spot_mainimage")
             .prefetch_related(
@@ -85,30 +80,20 @@ class SpotDetailView(DetailView, FormMixin):
             .first()
         )
 
-        self.context["users_comments"] = (
-            SpotRating.objects.filter(
-                spot_id=pk,
-            )
-            .select_related("user")
-            .prefetch_related(
-                Prefetch(
-                    "rating_images",
-                    queryset=RatingImages.objects.only("image"),
-                ),
-            )
-            .only(
-                "user__username",
-                "user__avatar",
-                "mark",
-                "comment",
-                "created_at",
-            )
-        )
+        self.context["users_comments"] = SpotRating.objects.commets(pk)
+        print()
+        user = self.context["users_comments"].filter(user_id=request.user.id)
 
+        form = SpotRatingForm(
+            None,
+            instance=user.first(),
+        )
+        self.context["form"] = form
         return render(request, self.template_name, self.context)
 
     def post(self, request, pk):
         form = SpotRatingForm(request.POST or None)
+               
         if request.method == "POST" and form.is_valid():
             if form.cleaned_data.get("mark") in (
                 5,
@@ -128,19 +113,21 @@ class SpotDetailView(DetailView, FormMixin):
                         spot=rating_spot[0],
                         image=request.FILES.get("images"),
                     )
+                else:
+                    RatingImages.objects.filter(
+                        spot=rating_spot[0],
+                        ).delete()
                 messages.success(request, "Рейтинг выставлен")
             elif form.cleaned_data.get("mark") == 0:
                 SpotRating.objects.filter(
                     user=request.user,
                     spot_id=pk,
                 ).delete()
+
                 messages.success(request, "Рейтинг удалён")
             else:
                 messages.error(request, "Ошибка обработки формы!")
-        return redirect(self.get_success_url(**self.kwargs))
-
-    def get_success_url(self, **kwargs):
-        return reverse("catalog:spot_detail", kwargs=self.kwargs)
+        return redirect(f"/catalog/{self.kwargs["pk"]}/")
 
 
 class CreateFishingPlaceView(View, FormMixin):

@@ -24,5 +24,5 @@ class SpotForm(forms.ModelForm):
             Spot.user.field.name,
             Spot.date_created.field.name,
             Spot.is_active.field.name,
-            Spot.tags.field.name,
+            #            Spot.tags.field.name,
         )
